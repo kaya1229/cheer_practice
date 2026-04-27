@@ -7,15 +7,16 @@
     <style>
         :root {
             --neo-green: #00FF00;
-            --soft-gray: #f8f9fa;
-            --text-dark: #333;
-            --point-blue: #e0e7ff;
+            --soft-blue: #f0f7ff;
+            --white: #ffffff;
+            --text-main: #2d3436;
+            --stamp-red: #ff4757;
         }
 
         body {
-            font-family: 'Pretendard', sans-serif;
-            background-color: var(--soft-gray);
-            color: var(--text-dark);
+            font-family: 'Pretendard', -apple-system, sans-serif;
+            background-color: var(--soft-blue);
+            color: var(--text-main);
             margin: 0;
             display: flex;
             flex-direction: column;
@@ -23,297 +24,253 @@
             min-height: 100vh;
         }
 
-        /* Header */
         header {
             width: 100%;
-            padding: 20px;
+            padding: 25px;
             text-align: center;
-            background: white;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            background: var(--white);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+            font-weight: 800;
+            font-size: 1.4rem;
+            letter-spacing: 1px;
         }
 
-        .logo {
-            font-weight: 900;
-            font-size: 1.5rem;
-            color: var(--text-dark);
-            letter-spacing: 2px;
-        }
-
-        /* Main Container */
         .container {
-            max-width: 800px;
-            width: 90%;
-            margin: 30px auto;
+            max-width: 900px;
+            width: 95%;
+            margin: 40px auto;
             text-align: center;
         }
 
-        /* Video Section */
-        .video-box {
+        /* Video Area */
+        .video-wrapper {
             width: 100%;
             aspect-ratio: 16 / 9;
-            background: #eee;
-            border-radius: 20px;
+            background: #000;
+            border-radius: 24px;
             overflow: hidden;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
             position: relative;
+            border: 8px solid var(--white);
         }
 
         video {
             width: 100%;
             height: 100%;
-            object-fit: cover;
+            object-fit: contain;
         }
 
-        /* Stamp Animation */
-        #stamp {
+        /* Stamp Mark */
+        #stamp-mark {
             position: absolute;
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%) scale(0);
-            z-index: 10;
+            z-index: 100;
             pointer-events: none;
-            transition: transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            transition: transform 0.15s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            background: rgba(255, 255, 255, 0.9);
+            padding: 20px;
+            border-radius: 50%;
+            border: 5px double var(--stamp-red);
         }
 
-        #stamp.active {
+        #stamp-mark.pop {
             transform: translate(-50%, -50%) scale(1);
         }
 
+        .stamp-text {
+            color: var(--stamp-red);
+            font-weight: 900;
+            font-size: 1.5rem;
+        }
+
+        /* Score Display */
+        .score-container {
+            margin: 20px 0;
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #4834d4;
+        }
+
         /* Lyrics Area */
-        .lyrics-container {
-            margin-top: 30px;
-            min-height: 120px;
-            padding: 20px;
-            background: white;
-            border-radius: 15px;
+        .lyrics-box {
+            background: var(--white);
+            padding: 30px;
+            border-radius: 20px;
+            min-height: 140px;
             display: flex;
-            flex-direction: column;
+            align-items: center;
             justify-content: center;
-        }
-
-        #current-lyric {
-            font-size: 1.4rem;
-            margin: 0;
-            transition: all 0.2s;
-        }
-
-        .is-chant {
-            color: var(--neo-green);
-            font-size: 2.2rem !important;
-            font-weight: bold;
-            text-shadow: 0 0 10px rgba(0, 255, 0, 0.3);
-        }
-
-        /* Controls */
-        .controls {
             margin-top: 20px;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.03);
         }
 
-        .btn {
-            padding: 15px 40px;
-            font-size: 1.1rem;
+        #lyric-text {
+            font-size: 1.6rem;
+            line-height: 1.5;
+            transition: all 0.2s;
+            margin: 0;
+        }
+
+        .highlight-chant {
+            color: var(--neo-green);
+            font-size: 2.6rem !important;
+            font-weight: 900;
+            text-shadow: 0 0 15px rgba(0, 255, 0, 0.4);
+            transform: scale(1.1);
+        }
+
+        /* Start Button */
+        #play-btn {
+            margin-top: 30px;
+            padding: 18px 50px;
+            font-size: 1.3rem;
             font-weight: bold;
+            background: var(--neo-green);
             border: none;
             border-radius: 50px;
             cursor: pointer;
-            transition: transform 0.2s;
+            box-shadow: 0 10px 20px rgba(0, 255, 0, 0.2);
+            transition: transform 0.2s, background 0.2s;
         }
 
-        #start-btn {
-            background-color: var(--neo-green);
-            color: black;
+        #play-btn:hover {
+            transform: translateY(-3px);
+            background: #00e600;
         }
 
-        .btn:hover {
-            transform: scale(1.05);
-        }
-
-        #file-input {
-            margin-bottom: 20px;
-        }
-
-        /* Score Board */
-        .score-board {
-            margin-top: 20px;
-            font-size: 1.2rem;
-            font-weight: bold;
+        .mic-status {
+            font-size: 0.9rem;
+            color: #666;
+            margin-top: 10px;
         }
     </style>
 </head>
 <body>
 
-<header>
-    <div class="logo">TRIANGLE : Love is...</div>
-</header>
+<header>TRIANGLE : Love is... 응원법 연습실</header>
 
 <div class="container">
-    <input type="file" id="file-input" accept="video/*">
-    
-    <div class="video-box">
-        <video id="main-video"></video>
-        <div id="stamp">
-            <svg width="150" height="150" viewBox="0 0 100 100">
-                <circle cx="50" cy="50" r="45" fill="none" stroke="#FF4747" stroke-width="5"/>
-                <text x="50" y="55" font-size="12" text-anchor="middle" fill="#FF4747" font-weight="bold">참 잘했어요</text>
-            </svg>
+    <div class="video-wrapper">
+        <video id="mv-video" src="videoplayback.mp4"></video>
+        <div id="stamp-mark">
+            <div class="stamp-text">참 잘했어요!</div>
         </div>
     </div>
 
-    <div class="score-board">
-        SCORE: <span id="score-display">0</span>
+    <div class="score-container">
+        SCORE: <span id="current-score">0</span>
     </div>
 
-    <div class="lyrics-container">
-        <p id="current-lyric">영상을 선택하고 시작 버튼을 눌러주세요!</p>
+    <div class="lyrics-box">
+        <p id="lyric-text">아래 버튼을 눌러 연습을 시작하세요!</p>
     </div>
 
-    <div class="controls">
-        <button id="start-btn" class="btn">응원법 연습 시작!</button>
-    </div>
+    <button id="play-btn">연습 시작하기</button>
+    <p class="mic-status">※ 마이크 권한이 필요합니다.</p>
 </div>
 
 <script>
-    // 1. 자막 데이터 (시간은 예시입니다. 노래에 맞춰 수정하세요!)
     const lyricsData = [
-       const lyricsData = [
-    { time: 5.0, text: "[음악] ♪", isChant: false },
-    { time: 10.0, text: "Ah-! Ready?", isChant: false },
-    { time: 15.0, text: "(트! 라이! 앵글! 럽! 이즈! 대! 박!)", isChant: true }, // 전주 응원
-    { time: 29.0, text: "Everybody! Come on!", isChant: false },
-    { time: 38.0, text: "Let me say!", isChant: false },
-    { time: 46.0, text: "너를 만난 건 가장 큰 행운", isChant: false },
-    { time: 50.0, text: "나의 모든 날을 다 돌아보면", isChant: false },
-    { time: 54.0, text: "너를 알아갈수록 (좋아져!)", isChant: true }, // 끝단어 강조
-    { time: 56.5, text: "자꾸 두려워", isChant: false },
-    { time: 60.0, text: "진심일까?", isChant: false },
-    { time: 62.0, text: "설마 너 이러면 어떡하지?", isChant: false },
-    { time: 64.0, text: "그러고 있을 거야 보나마나 뻔하잖아", isChant: false },
-    { time: 66.0, text: "(보! 나! 마! 나!)", isChant: true },
-    { time: 71.0, text: "아직은 아니야 지금 말하면 안 돼", isChant: false },
-    { time: 76.0, text: "뭐가 그리 복잡해 베이베", isChant: false },
-    { time: 81.0, text: "사랑은 웨이웨이 (웨이웨이!)", isChant: true },
-    { time: 86.0, text: "어려운 건지 아직도 메이메이", isChant: false },
-    { time: 88.0, text: "영원할 거라고", isChant: false },
-    { time: 90.0, text: "계속될 거라고 약속해 (약속해!)", isChant: true },
-    { time: 97.0, text: "너의 얼굴로 불러줘", isChant: false },
-    { time: 101.0, text: "천사 같은 너의 목소리로", isChant: false },
-    { time: 105.0, text: "나를 사랑해 이만큼!", isChant: true }, // 후렴 떼창
-    { time: 107.0, text: "나를 사랑해 쏟아지는 그만큼!", isChant: true },
-    { time: 123.0, text: "Say Hey-! (Hey!) Ho-! (Ho!)", isChant: true }, // 브릿지 호응
-    { time: 130.0, text: "사랑은 뭘까 사랑이 뭔지", isChant: false },
-    { time: 137.0, text: "이러면 어떡하지 저러면 어떡하지?", isChant: false },
-    { time: 139.0, text: "그러고 있을 거야 보나마나 뻔하잖아", isChant: false },
-    { time: 144.0, text: "어 그만하고 대답해 줄래?", isChant: false },
-    { time: 146.0, text: "아직은 아니야 지금 말이야", isChant: false },
-    { time: 153.0, text: "뭐가 그리 복잡해 베이베", isChant: false },
-    { time: 161.0, text: "영원할 거라고 계속될 거라고", isChant: false },
-    { time: 167.0, text: "약속해 말아줘", isChant: false },
-    { time: 175.0, text: "너의 얼굴로 불러줘", isChant: false },
-    { time: 178.0, text: "천사 같은 그 목소리로", isChant: false },
-    { time: 181.0, text: "나를 사랑해 이만큼! (이만큼!)", isChant: true },
-    { time: 184.0, text: "나를 사랑해 쏟아지는 그만큼!", isChant: true },
-    { time: 186.0, text: "그만큼- 랄랄라 ♪", isChant: false },
-    { time: 201.0, text: "(트! 라이! 앵글! 영! 원! 하! 자!)", isChant: true } // 엔딩 응원
-];
+        { time: 5.0, text: "[음악] ♪", isChant: false },
+        { time: 10.0, text: "Ah-! Ready?", isChant: false },
+        { time: 15.0, text: "(트! 라이! 앵글! 럽! 이즈! 대! 박!)", isChant: true },
+        { time: 29.0, text: "Everybody! Come on!", isChant: false },
+        { time: 38.0, text: "Let me say!", isChant: false },
+        { time: 46.0, text: "너를 만난 건 가장 큰 행운", isChant: false },
+        { time: 50.0, text: "나의 모든 날을 다 돌아보면", isChant: false },
+        { time: 54.0, text: "너를 알아갈수록 (좋아져!)", isChant: true },
+        { time: 56.5, text: "자꾸 두려워", isChant: false },
+        { time: 66.0, text: "(보! 나! 마! 나!)", isChant: true },
+        { time: 81.0, text: "사랑은 웨이웨이 (웨이웨이!)", isChant: true },
+        { time: 90.0, text: "약속해 (약속해!)", isChant: true },
+        { time: 105.0, text: "나를 사랑해 이만큼!", isChant: true },
+        { time: 107.0, text: "나를 사랑해 쏟아지는 그만큼!", isChant: true },
+        { time: 123.0, text: "Say Hey-! (Hey!) Ho-! (Ho!)", isChant: true },
+        { time: 181.0, text: "나를 사랑해 이만큼! (이만큼!)", isChant: true },
+        { time: 201.0, text: "(트! 라이! 앵글! 영! 원! 하! 자!)", isChant: true }
     ];
 
-    const video = document.getElementById('main-video');
-    const fileInput = document.getElementById('file-input');
-    const startBtn = document.getElementById('start-btn');
-    const lyricDisplay = document.getElementById('current-lyric');
-    const scoreDisplay = document.getElementById('score-display');
-    const stamp = document.getElementById('stamp');
+    const video = document.getElementById('mv-video');
+    const playBtn = document.getElementById('play-btn');
+    const lyricText = document.getElementById('lyric-text');
+    const scoreDisplay = document.getElementById('current-score');
+    const stamp = document.getElementById('stamp-mark');
 
     let score = 0;
-    let lastChantTime = -1;
+    let lastChantID = -1;
 
-    // 2. 영상 파일 로드 로직
-    fileInput.addEventListener('change', (e) => {
-        const file = e.target.files[0];
-        if (file) {
-            video.src = URL.createObjectURL(file);
-        }
-    });
-
-    // 3. 연습 시작
-    startBtn.addEventListener('click', () => {
-        if (!video.src) {
-            alert('연습할 영상을 먼저 선택해주세요!');
-            return;
-        }
+    // 1. 영상 재생 및 음성인식 시작
+    playBtn.addEventListener('click', () => {
         video.play();
-        startBtn.style.display = 'none';
-        setupVoiceRecognition(); // 음성 인식 시작 (함수 호출)
+        playBtn.style.display = 'none';
+        initMic();
     });
 
-    // 4. 자막 동기화 및 판정 로직
+    // 2. 실시간 자막 처리
     video.addEventListener('timeupdate', () => {
         const currentTime = video.currentTime;
-
         const active = lyricsData.find((l, i) => {
             const next = lyricsData[i+1];
             return currentTime >= l.time && (!next || currentTime < next.time);
         });
 
         if (active) {
-            lyricDisplay.innerText = active.text;
+            lyricText.innerText = active.text;
             if (active.isChant) {
-                lyricDisplay.classList.add('is-chant');
-                
-                // 연습용 로직: 응원법 구간일 때 소리가 감지되면 점수 (임시 시뮬레이션)
-                // 실제로는 마이크 입력값과 연동됩니다.
+                lyricText.classList.add('highlight-chant');
             } else {
-                lyricDisplay.classList.remove('is-chant');
+                lyricText.classList.remove('highlight-chant');
             }
         }
     });
 
-    // 5. 참 잘했어요 스탬프 표시 함수
-    function showStamp() {
-        stamp.classList.add('active');
+    // 3. '참 잘했어요' 판정 연출
+    function triggerSuccess() {
+        stamp.classList.add('pop');
         score += 100;
         scoreDisplay.innerText = score;
-        setTimeout(() => {
-            stamp.classList.remove('active');
-        }, 800);
+        setTimeout(() => stamp.classList.remove('pop'), 800);
     }
 
-    // 6. 간단한 마이크 감지 로직 (실제 응원 박자 판정용)
-    function setupVoiceRecognition() {
-        window.AudioContext = window.AudioContext || window.webkitAudioContext;
-        const audioContext = new AudioContext();
-        
-        navigator.mediaDevices.getUserMedia({ audio: true }).then(stream => {
-            const microphone = audioContext.createMediaStreamSource(stream);
+    // 4. 마이크 감지 로직
+    async function initMic() {
+        try {
+            const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+            const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+            const source = audioContext.createMediaStreamSource(stream);
             const analyser = audioContext.createAnalyser();
-            microphone.connect(analyser);
             analyser.fftSize = 256;
-            const bufferLength = analyser.frequencyBinCount;
-            const dataArray = new Uint8Array(bufferLength);
+            source.connect(analyser);
 
-            function checkVolume() {
+            const dataArray = new Uint8Array(analyser.frequencyBinCount);
+
+            function detectVoice() {
                 analyser.getByteFrequencyData(dataArray);
-                let values = 0;
-                for (let i = 0; i < bufferLength; i++) {
-                    values += dataArray[i];
-                }
-                const average = values / bufferLength;
+                let volume = dataArray.reduce((a, b) => a + b) / dataArray.length;
 
-                // 소리가 일정 이상 크고(average > 40), 현재 응원법 구간일 때
+                // 볼륨이 50 이상이고, 현재 가사가 응원법(isChant)일 때만 점수 획득
                 const currentTime = video.currentTime;
-                const currentLyric = lyricsData.find((l, i) => {
+                const currentLyricIndex = lyricsData.findIndex((l, i) => {
                     const next = lyricsData[i+1];
                     return currentTime >= l.time && (!next || currentTime < next.time);
                 });
 
-                if (average > 50 && currentLyric && currentLyric.isChant && lastChantTime !== currentLyric.time) {
-                    showStamp();
-                    lastChantTime = currentLyric.time; // 중복 점수 방지
+                if (volume > 55 && currentLyricIndex !== -1) {
+                    const currentLyric = lyricsData[currentLyricIndex];
+                    if (currentLyric.isChant && lastChantID !== currentLyricIndex) {
+                        triggerSuccess();
+                        lastChantID = currentLyricIndex; // 한 구간에 한 번만 점수
+                    }
                 }
-                requestAnimationFrame(checkVolume);
+                requestAnimationFrame(detectVoice);
             }
-            checkVolume();
-        });
+            detectVoice();
+        } catch (err) {
+            console.error("마이크 접근 거부:", err);
+            alert("마이크 권한이 필요합니다!");
+        }
     }
 </script>
 
