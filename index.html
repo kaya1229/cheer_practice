@@ -12,6 +12,7 @@
             --chant-blue: #007bff;
             --chant-red: #ff4757;
             --chant-green: #28a745;
+            --neo-green: #00FF00;
         }
 
         body {
@@ -23,6 +24,7 @@
 
         .container { max-width: 900px; width: 95%; margin: 40px auto; text-align: center; }
         
+        /* 비디오 영역 */
         .video-wrapper { 
             width: 100%; aspect-ratio: 16 / 9; background: #000; border-radius: 24px; 
             position: relative; overflow: hidden; border: 8px solid var(--white);
@@ -30,53 +32,44 @@
         }
         video { width: 100%; height: 100%; }
 
-        /* 가사 영역 디자인 */
+        /* 점수 및 스탬프 */
+        #stamp-mark {
+            position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%) scale(0);
+            z-index: 100; pointer-events: none; transition: transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            background: rgba(255, 255, 255, 0.9); padding: 20px; border-radius: 50%;
+            border: 5px double var(--chant-red); color: var(--chant-red); font-weight: 900; font-size: 1.5rem;
+        }
+        #stamp-mark.pop { transform: translate(-50%, -50%) scale(1); }
+
+        /* 가사 영역 */
         .lyrics-area {
-            background: var(--white);
-            padding: 25px; border-radius: 20px; min-height: 140px;
+            background: var(--white); padding: 25px; border-radius: 20px; min-height: 140px;
             margin-top: 25px; box-shadow: 0 10px 20px rgba(0,0,0,0.03);
             display: flex; flex-direction: column; gap: 15px; align-items: center;
+            border: 3px solid transparent; transition: all 0.3s;
         }
+        .lyrics-area.active-chant { border-color: var(--neo-green); box-shadow: 0 0 20px rgba(0, 255, 0, 0.15); }
 
-        /* 현재 가사 (크게) */
-        #current-line {
-            font-size: 1.8rem; font-weight: 800; min-height: 2.2rem;
-            display: flex; align-items: center; justify-content: center;
-        }
-
-        /* 다음 가사 (작게) */
-        #next-line {
-            font-size: 1.2rem; font-weight: 500; color: var(--text-next);
-            min-height: 1.5rem; opacity: 0.8;
-        }
+        #current-line { font-size: 1.8rem; font-weight: 800; min-height: 2.2rem; }
+        #next-line { font-size: 1.1rem; font-weight: 500; color: var(--text-next); }
 
         /* 색상 스타일 */
         .chant-blue { color: var(--chant-blue); }
         .chant-red { color: var(--chant-red); }
         .chant-green { color: var(--chant-green); }
 
-        /* 타자기 애니메이션 */
+        /* 타자기 효과 */
         .typing {
-            display: inline-block;
-            overflow: hidden;
-            white-space: nowrap;
+            display: inline-block; overflow: hidden; white-space: nowrap;
             border-right: 3px solid var(--text-main);
-            animation: typing 0.9s steps(40, end), blink 0.7s step-end infinite;
+            animation: typing 0.6s steps(40, end), blink 0.5s step-end infinite;
         }
-
-        @keyframes typing {
-            from { width: 0; }
-            to { width: 100%; }
-        }
-        @keyframes blink {
-            from, to { border-color: transparent; }
-            50% { border-color: var(--text-main); }
-        }
+        @keyframes typing { from { width: 0; } to { width: 100%; } }
+        @keyframes blink { from, to { border-color: transparent; } 50% { border-color: var(--text-main); } }
 
         #play-btn {
             margin-top: 25px; padding: 15px 50px; font-size: 1.2rem; font-weight: bold;
-            background: #00FF00; border: none; border-radius: 50px; cursor: pointer;
-            box-shadow: 0 5px 15px rgba(0,255,0,0.3);
+            background: var(--neo-green); border: none; border-radius: 50px; cursor: pointer;
         }
     </style>
 </head>
@@ -85,130 +78,134 @@
 <div class="container">
     <div class="video-wrapper">
         <video id="mv-video" src="videoplayback.mp4"></video>
+        <div id="stamp-mark">참 잘했어요!</div>
     </div>
 
-    <div class="lyrics-area">
+    <div class="score-board">SCORE: <span id="score-val">0</span></div>
+
+    <div class="lyrics-area" id="lyrics-box">
         <div id="current-line"></div>
-        <div id="next-line">연습 시작 버튼을 눌러주세요!</div>
+        <div id="next-line">버튼을 눌러 연습을 시작하세요!</div>
     </div>
 
-    <button id="play-btn">연습 시작하기</button>
+    <button id="play-btn">연습 시작하기 (마이크 사용)</button>
 </div>
 
 <script>
     const lyricsData = [
-    { time: 0.5, text: "Are you ready? <span class='chant-blue'>(YEAH~)</span>" },
-    { time: 27.0, text: "<span class='chant-red'>(댄스머신 황현우!)</span>" },
-    { time: 29.0, text: "Everybody <span class='chant-red'>(절대매력 번도미!)</span>" },
-    { time: 31.0, text: "Everybody, body <span class='chant-red'>(폭풍래퍼 구상구!)</span>" },
-    { time: 35.0, text: "Uh Uh Come on now" },
-    { time: 38.0, text: "Let me hear you say What's up" },
-    { time: 41.0, text: "Say <span class='chant-green'>트-트-트-트라이 앵글</span>" },
-    { time: 43.5, text: "Say <span class='chant-green'>트-트-트-트라이 앵글 Uh!</span>" },
-    { time: 46.0, text: "너를 만난건 가장 큰 행운이야" },
-    { time: 50.0, text: "나의 모든 날을 다 돌아보면" },
-    { time: 54.0, text: "너를 알아갈수록 자꾸 두려워져" },
-    { time: 58.0, text: "어디까지가 네 진심일까 <span class='chant-red'>(내꺼하자 황현우!)</span>" },
-    { time: 62.0, text: "설마 너 이러면 어떡하지 <span class='chant-blue'>(왜!)</span>" },
-    { time: 64.5, text: "저러면 어떡하지 <span class='chant-blue'>(왜!)</span>" },
-    { time: 67.0, text: "그러고 있을거야 보나마나 뻔하잖아 uh" },
-    { time: 70.0, text: "그만하고 대답해 줄래? <span class='chant-red'>(내꺼하자 번도미!)</span>" },
-    { time: 74.0, text: "아직은 아냐 <span class='chant-blue'>(왜!)</span>, 지금 말야" },
-    { time: 78.0, text: "그러면 안돼 <span class='chant-blue'>(왜!)</span>, 이러면 안돼" },
-    { time: 82.0, text: "뭐가 그리 복잡해 baby" },
-    { time: 85.0, text: "사랑은 왜 이리 왜 이리 어려운건지" },
-    { time: 90.0, text: "영원할 거라고 (워어어)" },
-    { time: 94.0, text: "계속 될 거라고 약속해 my love <span class='chant-blue'>(약속해!)</span>" },
-    { time: 105.0, text: "너를 사랑해 <span class='chant-blue'>(사랑해!)</span> 이만큼" },
-    { time: 108.0, text: "너를 사랑해 <span class='chant-blue'>(사랑해!)</span> 쏟아질 만큼" },
-    { time: 111.0, text: "<span class='chant-blue'>(사랑해!)</span> 그 만큼" },
-    { time: 115.0, text: "[간주 중 - 트라이앵글 짱!]" },
-    { time: 155.0, text: "<span class='chant-red'>댄스머신 황현우! 절대매력 번도미!</span>" },
-    { time: 159.0, text: "<span class='chant-red'>폭풍래퍼 구상구!</span> <span class='chant-blue'>트 라이! 앵! 글!</span>" },
-    { time: 165.0, text: "<span class='chant-green'>say hey ho hey ho</span>" },
-    { time: 170.0, text: "사랑이 뭔지 love is <span class='chant-red'>(내꺼하자 구상구!)</span>" },
-    { time: 175.0, text: "설마 너 이러면 어떡하지 <span class='chant-blue'>(왜!)</span>" },
-    { time: 178.0, text: "저러면 어떡하지 <span class='chant-blue'>(왜!)</span>" },
-    { time: 182.0, text: "그만하고 대답해 줄래? <span class='chant-red'>(내꺼하자 번도미!)</span>" },
-    { time: 186.0, text: "아직은 아냐 <span class='chant-blue'>(왜!)</span>, 지금 말야" },
-    { time: 190.0, text: "그러면 안돼 <span class='chant-blue'>(왜!)</span>, 이러면 안돼" },
-    { time: 200.0, text: "계속 될 거라고 약속해 my love <span class='chant-blue'>(약속해!)</span>" },
-    { time: 210.0, text: "너를 사랑해 <span class='chant-blue'>(사랑해!)</span> 이만큼" },
-    { time: 214.0, text: "너를 사랑해 <span class='chant-blue'>(사랑해!)</span> 쏟아질 만큼 <span class='chant-blue'>(사랑해!)</span> 그 만큼" },
-    { time: 220.0, text: "<span class='chant-green'>나나나 나나나나나 나나 나나</span>" },
-    { time: 225.0, text: "<span class='chant-green'>(황현우! 번도미! 구상구! 사랑해!)</span>" },
-    { time: 230.0, text: "Triangle's in the house" },
-    { time: 235.0, text: "<span class='chant-blue'>(트트트! 트라이앵글!)</span>" }
-];
+        { time: 0.5, text: "Are you ready? <span class='chant-blue'>(YEAH~)</span>" },
+        { time: 27.0, text: "<span class='chant-red'>(댄스머신 황현우!)</span>" },
+        { time: 29.0, text: "Everybody <span class='chant-red'>(절대매력 번도미!)</span>" },
+        { time: 31.0, text: "Everybody, body <span class='chant-red'>(폭풍래퍼 구상구!)</span>" },
+        { time: 41.0, text: "Say <span class='chant-green'>트-트-트-트라이 앵글</span>" },
+        { time: 43.5, text: "Say <span class='chant-green'>트-트-트-트라이 앵글 Uh!</span>" },
+        { time: 46.0, text: "너를 만난건 가장 큰 행운이야" },
+        { time: 58.0, text: "어디까지가 네 진심일까 <span class='chant-red'>(내꺼하자 황현우!)</span>" },
+        { time: 63.0, text: "설마 너 이러면 어떡하지 <span class='chant-blue'>(왜!)</span>" },
+        { time: 65.5, text: "저러면 어떡하지 <span class='chant-blue'>(왜!)</span>" },
+        { time: 71.0, text: "그만하고 대답해 줄래? <span class='chant-red'>(내꺼하자 번도미!)</span>" },
+        { time: 75.0, text: "아직은 아냐 <span class='chant-blue'>(왜!)</span>, 지금 말야" },
+        { time: 79.0, text: "그러면 안돼 <span class='chant-blue'>(왜!)</span>, 이러면 안돼" },
+        { time: 91.0, text: "영원할 거라고 (워어어)" },
+        { time: 95.0, text: "계속 될 거라고 약속해 my love <span class='chant-blue'>(약속해!)</span>" },
+        { time: 106.0, text: "너를 사랑해 <span class='chant-blue'>(사랑해!)</span> 이만큼" },
+        { time: 109.0, text: "너를 사랑해 <span class='chant-blue'>(사랑해!)</span> 쏟아질 만큼" },
+        { time: 156.0, text: "<span class='chant-red'>댄스머신 황현우! 절대매력 번도미!</span>" },
+        { time: 160.0, text: "<span class='chant-red'>폭풍래퍼 구상구!</span> <span class='chant-blue'>트 라이! 앵! 글!</span>" },
+        { time: 171.0, text: "사랑이 뭔지 love is <span class='chant-red'>(내꺼하자 구상구!)</span>" },
+        { time: 226.0, text: "<span class='chant-green'>(황현우! 번도미! 구상구! 사랑해!)</span>" },
+        { time: 236.0, text: "<span class='chant-blue'>(트트트! 트라이앵글!)</span>" }
+    ];
 
     const video = document.getElementById('mv-video');
     const playBtn = document.getElementById('play-btn');
     const currentLine = document.getElementById('current-line');
     const nextLine = document.getElementById('next-line');
-    let lastIndex = -1;
+    const lyricsBox = document.getElementById('lyrics-box');
+    const stamp = document.getElementById('stamp-mark');
+    const scoreVal = document.getElementById('score-val');
 
-    playBtn.addEventListener('click', () => {
-        video.play();
-        playBtn.style.display = 'none';
+    let lastIndex = -1;
+    let score = 0;
+    let canScoring = false; // 음성 인식 게이트
+    let hasScoredThisLine = false; 
+
+    playBtn.addEventListener('click', async () => {
+        try {
+            await initMic();
+            video.play();
+            playBtn.style.display = 'none';
+        } catch (e) {
+            alert("마이크 권한이 필요합니다!");
+        }
     });
 
     video.addEventListener('timeupdate', () => {
         const currentTime = video.currentTime;
-        
-        // 현재 인덱스 찾기
         const currentIndex = lyricsData.findLastIndex(l => currentTime >= l.time);
 
         if (currentIndex !== -1 && currentIndex !== lastIndex) {
             const currentData = lyricsData[currentIndex];
             const nextData = lyricsData[currentIndex + 1];
 
-            // 현재 가사 업데이트 (타이핑 애니메이션 포함)
+            // 1. 응원 구간 여부 확인 (span 태그 존재 여부)
+            canScoring = currentData.text.includes('chant-');
+            hasScoredThisLine = false; // 새로운 줄이 시작되면 점수 획득 가능 상태로
+
+            // 2. 가사 출력 및 효과
             currentLine.innerHTML = `<span class="typing">${currentData.text}</span>`;
-            
-            // 다음 가사 예고 업데이트 (애니메이션 없이 정적으로 표시)
+            if (canScoring) lyricsBox.classList.add('active-chant');
+            else lyricsBox.classList.remove('active-chant');
+
+            // 3. 다음 가사 예고
             if (nextData) {
-                // 다음 가사는 태그를 제거하고 텍스트만 깔끔하게 보여줌
-                const tempDiv = document.createElement("div");
-                tempDiv.innerHTML = nextData.text;
-                nextLine.innerText = "Next: " + tempDiv.innerText;
+                const temp = document.createElement("div");
+                temp.innerHTML = nextData.text;
+                nextLine.innerText = "Next: " + temp.innerText;
             } else {
                 nextLine.innerText = "TRIANGLE Forever!";
             }
-
             lastIndex = currentIndex;
         }
     });
-    // 싱크 찍기용 도구
-const syncLog = [];
-window.addEventListener('keydown', (e) => {
-    if (e.code === 'Space') {
-        e.preventDefault(); // 스크롤 방지
-        const currentTime = video.currentTime.toFixed(1); // 소수점 한자리까지
-        const currentText = lyricsData[syncLog.length]?.text || "데이터 끝";
-        
-        const logEntry = `{ time: ${currentTime}, text: "${currentText}" },`;
-        syncLog.push(logEntry);
-        
-        console.log(logEntry); // 개발자 도구(F12) 콘솔에 출력
-        
-        // 화면에도 실시간으로 찍어주기 (선택 사항)
-        showSyncToast(logEntry);
+
+    // 마이크 초기화 및 감지
+    async function initMic() {
+        const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+        const audioContext = new AudioContext();
+        const analyser = audioContext.createAnalyser();
+        const source = audioContext.createMediaStreamSource(stream);
+        source.connect(analyser);
+        const dataArray = new Uint8Array(analyser.frequencyBinCount);
+
+        function checkVolume() {
+            analyser.getByteFrequencyData(dataArray);
+            const volume = dataArray.reduce((a, b) => a + b) / dataArray.length;
+
+            // 판정: 게이트가 열려있고 + 소리가 크고 + 이번 줄에서 아직 점수를 안 땄을 때
+            if (canScoring && volume > 50 && !hasScoredThisLine) {
+                triggerSuccess();
+                hasScoredThisLine = true;
+            }
+            requestAnimationFrame(checkVolume);
+        }
+        checkVolume();
     }
-});
 
-// 화면 하단에 찍힌 시간을 잠시 보여주는 함수
-function showSyncToast(message) {
-    const toast = document.createElement('div');
-    toast.style.cssText = `
-        position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%);
-        background: rgba(0,0,0,0.8); color: white; padding: 10px 20px;
-        border-radius: 10px; z-index: 1000; font-family: monospace;
-    `;
-    toast.innerText = message;
-    document.body.appendChild(toast);
-    setTimeout(() => toast.remove(), 1500);
-}
+    function triggerSuccess() {
+        score += 100;
+        scoreVal.innerText = score;
+        stamp.classList.add('pop');
+        setTimeout(() => stamp.classList.remove('pop'), 800);
+    }
+
+    // 싱크 찍기 도구 (Space)
+    window.addEventListener('keydown', (e) => {
+        if (e.code === 'Space') {
+            e.preventDefault();
+            console.log(`{ time: ${video.currentTime.toFixed(1)}, text: "${lyricsData[lastIndex+1]?.text || ''}" },`);
+        }
+    });
 </script>
-
 </body>
 </html>
