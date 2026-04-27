@@ -61,7 +61,7 @@
             overflow: hidden;
             white-space: nowrap;
             border-right: 3px solid var(--text-main);
-            animation: typing 0.6s steps(40, end), blink 0.5s step-end infinite;
+            animation: typing 0.9s steps(40, end), blink 0.7s step-end infinite;
         }
 
         @keyframes typing {
@@ -97,29 +97,49 @@
 
 <script>
     const lyricsData = [
-        { time: 0.5, text: "Are you ready? <span class='chant-blue'>(YEAH~)</span>" },
-        { time: 27.0, text: "<span class='chant-red'>(댄스머신 황현우!)</span>" },
-        { time: 29.0, text: "Everybody <span class='chant-red'>(절대매력 번도미!)</span>" },
-        { time: 31.0, text: "Everybody, body <span class='chant-red'>(폭풍래퍼 구상구!)</span>" },
-        { time: 41.0, text: "Say <span class='chant-green'>트-트-트-트라이 앵글</span>" },
-        { time: 43.5, text: "Say <span class='chant-green'>트-트-트-트라이 앵글 Uh!</span>" },
-        { time: 46.0, text: "너를 만난건 가장 큰 행운이야" },
-        { time: 58.0, text: "어디까지가 네 진심일까 <span class='chant-red'>(내꺼하자 황현우!)</span>" },
-        { time: 63.0, text: "설마 너 이러면 어떡하지 <span class='chant-blue'>(왜!)</span>" },
-        { time: 65.5, text: "저러면 어떡하지 <span class='chant-blue'>(왜!)</span>" },
-        { time: 71.0, text: "그만하고 대답해 줄래? <span class='chant-red'>(내꺼하자 번도미!)</span>" },
-        { time: 75.0, text: "아직은 아냐 <span class='chant-blue'>(왜!)</span>, 지금 말야" },
-        { time: 79.0, text: "그러면 안돼 <span class='chant-blue'>(왜!)</span>, 이러면 안돼" },
-        { time: 91.0, text: "영원할 거라고 (워어어)" },
-        { time: 95.0, text: "계속 될 거라고 약속해 my love <span class='chant-blue'>(약속해!)</span>" },
-        { time: 106.0, text: "너를 사랑해 <span class='chant-blue'>(사랑해!)</span> 이만큼" },
-        { time: 109.0, text: "너를 사랑해 <span class='chant-blue'>(사랑해!)</span> 쏟아질 만큼" },
-        { time: 156.0, text: "<span class='chant-red'>댄스머신 황현우! 절대매력 번도미!</span>" },
-        { time: 160.0, text: "<span class='chant-red'>폭풍래퍼 구상구!</span> <span class='chant-blue'>트 라이! 앵! 글!</span>" },
-        { time: 171.0, text: "사랑이 뭔지 love is <span class='chant-red'>(내꺼하자 구상구!)</span>" },
-        { time: 226.0, text: "<span class='chant-green'>(황현우! 번도미! 구상구! 사랑해!)</span>" },
-        { time: 236.0, text: "<span class='chant-blue'>(트트트! 트라이앵글!)</span>" }
-    ];
+    { time: 0.5, text: "Are you ready? <span class='chant-blue'>(YEAH~)</span>" },
+    { time: 27.0, text: "<span class='chant-red'>(댄스머신 황현우!)</span>" },
+    { time: 29.0, text: "Everybody <span class='chant-red'>(절대매력 번도미!)</span>" },
+    { time: 31.0, text: "Everybody, body <span class='chant-red'>(폭풍래퍼 구상구!)</span>" },
+    { time: 35.0, text: "Uh Uh Come on now" },
+    { time: 38.0, text: "Let me hear you say What's up" },
+    { time: 41.0, text: "Say <span class='chant-green'>트-트-트-트라이 앵글</span>" },
+    { time: 43.5, text: "Say <span class='chant-green'>트-트-트-트라이 앵글 Uh!</span>" },
+    { time: 46.0, text: "너를 만난건 가장 큰 행운이야" },
+    { time: 50.0, text: "나의 모든 날을 다 돌아보면" },
+    { time: 54.0, text: "너를 알아갈수록 자꾸 두려워져" },
+    { time: 58.0, text: "어디까지가 네 진심일까 <span class='chant-red'>(내꺼하자 황현우!)</span>" },
+    { time: 62.0, text: "설마 너 이러면 어떡하지 <span class='chant-blue'>(왜!)</span>" },
+    { time: 64.5, text: "저러면 어떡하지 <span class='chant-blue'>(왜!)</span>" },
+    { time: 67.0, text: "그러고 있을거야 보나마나 뻔하잖아 uh" },
+    { time: 70.0, text: "그만하고 대답해 줄래? <span class='chant-red'>(내꺼하자 번도미!)</span>" },
+    { time: 74.0, text: "아직은 아냐 <span class='chant-blue'>(왜!)</span>, 지금 말야" },
+    { time: 78.0, text: "그러면 안돼 <span class='chant-blue'>(왜!)</span>, 이러면 안돼" },
+    { time: 82.0, text: "뭐가 그리 복잡해 baby" },
+    { time: 85.0, text: "사랑은 왜 이리 왜 이리 어려운건지" },
+    { time: 90.0, text: "영원할 거라고 (워어어)" },
+    { time: 94.0, text: "계속 될 거라고 약속해 my love <span class='chant-blue'>(약속해!)</span>" },
+    { time: 105.0, text: "너를 사랑해 <span class='chant-blue'>(사랑해!)</span> 이만큼" },
+    { time: 108.0, text: "너를 사랑해 <span class='chant-blue'>(사랑해!)</span> 쏟아질 만큼" },
+    { time: 111.0, text: "<span class='chant-blue'>(사랑해!)</span> 그 만큼" },
+    { time: 115.0, text: "[간주 중 - 트라이앵글 짱!]" },
+    { time: 155.0, text: "<span class='chant-red'>댄스머신 황현우! 절대매력 번도미!</span>" },
+    { time: 159.0, text: "<span class='chant-red'>폭풍래퍼 구상구!</span> <span class='chant-blue'>트 라이! 앵! 글!</span>" },
+    { time: 165.0, text: "<span class='chant-green'>say hey ho hey ho</span>" },
+    { time: 170.0, text: "사랑이 뭔지 love is <span class='chant-red'>(내꺼하자 구상구!)</span>" },
+    { time: 175.0, text: "설마 너 이러면 어떡하지 <span class='chant-blue'>(왜!)</span>" },
+    { time: 178.0, text: "저러면 어떡하지 <span class='chant-blue'>(왜!)</span>" },
+    { time: 182.0, text: "그만하고 대답해 줄래? <span class='chant-red'>(내꺼하자 번도미!)</span>" },
+    { time: 186.0, text: "아직은 아냐 <span class='chant-blue'>(왜!)</span>, 지금 말야" },
+    { time: 190.0, text: "그러면 안돼 <span class='chant-blue'>(왜!)</span>, 이러면 안돼" },
+    { time: 200.0, text: "계속 될 거라고 약속해 my love <span class='chant-blue'>(약속해!)</span>" },
+    { time: 210.0, text: "너를 사랑해 <span class='chant-blue'>(사랑해!)</span> 이만큼" },
+    { time: 214.0, text: "너를 사랑해 <span class='chant-blue'>(사랑해!)</span> 쏟아질 만큼 <span class='chant-blue'>(사랑해!)</span> 그 만큼" },
+    { time: 220.0, text: "<span class='chant-green'>나나나 나나나나나 나나 나나</span>" },
+    { time: 225.0, text: "<span class='chant-green'>(황현우! 번도미! 구상구! 사랑해!)</span>" },
+    { time: 230.0, text: "Triangle's in the house" },
+    { time: 235.0, text: "<span class='chant-blue'>(트트트! 트라이앵글!)</span>" }
+];
 
     const video = document.getElementById('mv-video');
     const playBtn = document.getElementById('play-btn');
